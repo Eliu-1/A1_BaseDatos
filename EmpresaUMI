@@ -1,0 +1,63 @@
+CREATE DATABASE EmpresaUNI;
+GO
+
+USE EmpresaUNI;
+GO
+
+-- Tabla Puesto
+CREATE TABLE Puesto (
+    id_puesto INT IDENTITY(1,1) PRIMARY KEY,
+    nombre_puesto VARCHAR(100) NOT NULL
+);
+
+-- Tabla CentroTrabajo
+CREATE TABLE CentroTrabajo (
+    id_centro INT IDENTITY(1,1) PRIMARY KEY,
+    nombre_centro VARCHAR(100) NOT NULL
+);
+
+-- Tabla Empleado
+CREATE TABLE Empleado (
+    id_empleado INT IDENTITY(1,1) PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    apellido_paterno VARCHAR(50) NOT NULL,
+    apellido_materno VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    rfc CHAR(13) NOT NULL,
+    descripcion_puesto VARCHAR(200),
+    directivo BIT NOT NULL,
+    id_puesto INT NOT NULL,
+    id_centro_trabajo INT NOT NULL,
+    FOREIGN KEY (id_puesto) REFERENCES Puesto(id_puesto),
+    FOREIGN KEY (id_centro_trabajo) REFERENCES CentroTrabajo(id_centro)
+);
+
+-- Tabla Directivo
+CREATE TABLE Directivo (
+    id_empleado INT PRIMARY KEY,
+    centro_supervisado INT NOT NULL,
+    prestacion_combustible BIT NOT NULL,
+    FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado)
+);
+GO
+
+-- Inserción de datos
+INSERT INTO Puesto (nombre_puesto)
+VALUES ('Administrador'), ('Supervisor'), ('Auxiliar'), ('Directivo General');
+
+INSERT INTO CentroTrabajo (nombre_centro)
+VALUES ('Centro A'), ('Centro B'), ('Centro C');
+
+INSERT INTO Empleado 
+(nombre, apellido_paterno, apellido_materno, fecha_nacimiento, rfc, descripcion_puesto, directivo, id_puesto, id_centro_trabajo)
+VALUES
+('Juan', 'López', 'Ramírez', '1990-05-10', 'LORJ900510ABC', 'Administrador de área', 0, 1, 1),
+('Ana', 'Pérez', 'Gómez', '1985-09-21', 'PEGA850921XYZ', 'Auxiliar administrativa', 0, 3, 2),
+('Carlos', 'Santos', 'Mejía', '1975-03-02', 'SAME750302RTY', 'Supervisor general', 1, 2, 1),
+('Luis', 'Martínez', 'Torres', '1988-12-11', 'MATL881211AAA', 'Directivo regional', 1, 4, 3),
+('Maria', 'Díaz', 'Guzmán', '1992-08-19', 'DAGM920819BBB', 'Auxiliar', 0, 3, 2);
+
+INSERT INTO Directivo (id_empleado, centro_supervisado, prestacion_combustible)
+VALUES
+(3, 1, 1),
+(4, 2, 0);
